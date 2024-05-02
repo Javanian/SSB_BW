@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcode Generator</title>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        text-align: center;
+    }
+</style>
+<script>
+function generateBarcode() {
+    var inputText = document.getElementById("textInput").value;
+    var imageUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(inputText) + "&translate-esc=on";
+    document.getElementById("barcodeImage").src = imageUrl;
+}
+
+function handleSubmit(event) {
+    event.preventDefault(); // Prevent default form submission
+    document.getElementById("barcodeImage").src = ""; // Set image source to blank
+    generateBarcode(); // Generate barcode
+}
+</script>
+</head>
+<body>
+    <div class="container">
+        <form onsubmit="handleSubmit(event)">
+            <label for="textInput">Enter text:</label><br>
+            <input type="text" id="textInput" name="textInput"><br><br>
+            <input type="submit" value="Generate Barcode">
+        </form>
+        <br>
+        <img id="barcodeImage" src="" alt="Generated Barcode">
+    </div>
+</body>
+</html>
