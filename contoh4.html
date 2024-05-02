@@ -19,7 +19,7 @@
 <script>
 function generateBarcode() {
     var inputText = document.getElementById("textInput").value;
-    var imageUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(inputText) + "&translate-esc=on";
+    var imageUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(inputText) + "&code=MobileQRCode&dpi=200&imagetype=Jpg&eclevel=L";
     document.getElementById("barcodeImage").src = imageUrl;
 }
 
