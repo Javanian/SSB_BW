@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form to Power Automate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .form-container, .thank-you {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .thank-you.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container active" id="formContainer">
+        <form id="myForm">
+            <label for="textInput1">Nama Karyawan:</label>
+            <input type="text" id="textInput1" name="textInput1" required>
+
+            <label for="textInput2">SN Karyawan:</label>
+            <input type="text" id="textInput2" name="textInput2" required>
+
+            <label for="choice3">Area:</label>
+            <select id="choice3" name="choice3" required>
+                <option value="">Select...</option>
+                <option value="Balikpapan">Balikpapan</option>
+                <option value="Batu Hijau">Batu Hijau</option>
+                <option value="Bengalon">Bengalon</option>
+                <option value="Berau">Berau</option>
+                <option value="Grassberg">Grassberg</option>
+                <option value="Jakarta">Jakarta</option>
+                <option value="Lahat">Lahat</option>
+                <option value="Meulaboh">Meulaboh</option>
+                <option value="Muara Bungo">Muara Bungo</option>
+                <option value="Rantau">Rantau</option>
+                <option value="Samarinda">Samarinda</option>
+                <option value="Sangatta">Sangatta</option>
+                <option value="Satui">Satui</option>
+                <option value="Soroako">Soroako</option>
+                <option value="Surabaya">Surabaya</option>
+                <option value="Tangerang">Tangerang</option>
+                <option value="Tanjung">Tanjung</option>
+                <option value="Timika">Timika</option>
+                
+            </select>
+
+            <label for="choice1">Status Karyawan:</label>
+            <select id="choice1" name="choice1" required>
+                <option value="">Select...</option>
+                <option value="SSB">SSB</option>
+            <option value="VENDOR">VENDOR</option>
+            </select>
+
+            <label for="choice2">Jenis Surat:</label>
+            <select id="choice2" name="choice2" required>
+                <option value="">Select...</option>
+                <option value="SIM A">SIM A</option>
+            <option value="SIM B">SIM B</option>
+            <option value="SIM C">SIM C</option>
+            <option value="STNK">STNK</option>
+            </select>
+
+
+
+            <label for="attachment">Lampiran Foto Surat:</label>
+            <input type="file" id="attachment" name="attachment" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="thank-you" id="thankYouContainer">
+        <h2>MANTAP!</h2>
+        <p>LAPORAN SUDAH TERKIRIM.</p>
+    </div>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('myForm');
+            const formData = new FormData(form);
+
+            const jsonData = {};
+            const fileInput = formData.get('attachment');
+
+            formData.forEach((value, key) => {
+                if (key !== 'attachment') {
+                    jsonData[key] = value;
+                }
+            });
+
+            if (fileInput) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    jsonData['attachment'] = {
+                        content: reader.result.split(',')[1],
+                        contentType: fileInput.type,
+                        fileName: fileInput.name
+                    };
+                    sendToPowerAutomate(jsonData);
+                };
+                reader.readAsDataURL(fileInput);
+            } else {
+                sendToPowerAutomate(jsonData);
+            }
+        });
+
+        function sendToPowerAutomate(data) {
+            fetch('https://prod-28.southeastasia.logic.azure.com:443/workflows/14ae219782864f2295877de53529643b/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hOF2q5so_2n0UaBsgNBBB7SSkDRI0umPJzFicf2OGmM', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                showThankYouMessage();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showThankYouMessage();
+            });
+        }
+
+        function showThankYouMessage() {
+            document.getElementById('formContainer').classList.remove('active');
+            document.getElementById('thankYouContainer').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
+
