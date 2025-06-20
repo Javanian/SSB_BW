@@ -1,55 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driving License SSB</title>
     <style>
-        body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9fafb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
- 
-    .notice-container {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-      padding: 24px 32px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      max-width: 500px;
-      text-align: center;
-      animation: popIn 0.4s ease-out;
-    }
- 
-    .notice-container h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-    }
- 
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
- 
-    @media (max-width: 600px) {
-      .notice-container {
-        padding: 20px;
-        font-size: 0.95rem;
-      }
-    }
-
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -60,7 +16,8 @@
             margin: 0;
         }
 
-        .form-container, .thank-you {
+        .form-container,
+        .thank-you {
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -110,13 +67,9 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="notice-container">
-    <h2>⏳ Pemberitahuan</h2>
-    <p>Aplikasi sedang dalam proses <strong>maintenance</strong> hingga pukul <strong>17.00 WIB</strong>.</p>
-    <p>Mohon maaf atas ketidaknyamanannya 🙏</p>
-  </div>
-    <div class="form-container none" id="formContainer">
+    <div class="form-container active" id="formContainer">
         <form id="myForm">
             <label for="textInput1">Nama Karyawan:</label>
             <input type="text" id="textInput1" name="textInput1" required>
@@ -148,25 +101,25 @@
                 <option value="Tangerang">Tangerang</option>
                 <option value="Tanjung">Tanjung</option>
                 <option value="Timika">Timika</option>
-                
+
             </select>
 
             <label for="choice1">Status Karyawan:</label>
             <select id="choice1" name="choice1" required>
                 <option value="">Select...</option>
                 <option value="SSB">SSB</option>
-            <option value="VENDOR">VENDOR</option>
+                <option value="VENDOR">VENDOR</option>
             </select>
 
             <label for="choice2">Jenis SIM:</label>
             <select id="choice2" name="choice2" required>
                 <option value="">Select...</option>
                 <option value="SIM A">SIM A</option>
-            <option value="SIM B">SIM B</option>
-            <option value="SIM C">SIM C</option>
+                <option value="SIM B">SIM B</option>
+                <option value="SIM C">SIM C</option>
             </select>
 
-            
+
             <label for="attachment">Lampiran Foto SIM:</label>
             <input type="file" id="attachment" name="attachment" required>
             <label for="attachment">Lampiran Foto STNK:</label>
@@ -182,35 +135,67 @@
     </div>
 
     <script>
-        document.getElementById('myForm').addEventListener('submit', function(event) {
+        document.getElementById('myForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
             const form = document.getElementById('myForm');
             const formData = new FormData(form);
 
             const jsonData = {};
-            const fileInput = formData.get('attachment');
-
+            const fileInput1 = formData.get('attachment');
+            const fileInput2 = formData.get('attachment2');
             formData.forEach((value, key) => {
-                if (key !== 'attachment'&& key !== 'attachment2') {
+                if (key !== 'attachment' && key !== 'attachment2') {
                     jsonData[key] = value;
                 }
             });
+            
 
-            if (fileInput) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    jsonData['attachment'] = {
-                        content: reader.result.split(',')[1],
-                        contentType: fileInput.type,
-                        fileName: fileInput.name
-                    };
-                    sendToPowerAutomate(jsonData);
+            const handleFiles = () => {
+                let filesProcessed = 0;
+
+                const checkAndSend = () => {
+                    filesProcessed++;
+                    if (
+                        (!fileInput1 || (fileInput1 && jsonData.attachment)) &&
+                        (!fileInput2 || (fileInput2 && jsonData.attachment2))
+                    ) {
+                        sendToPowerAutomate(jsonData);
+                    }
                 };
-                reader.readAsDataURL(fileInput);
-            } else {
-                sendToPowerAutomate(jsonData);
-            }
+
+                if (fileInput1) {
+                    const reader1 = new FileReader();
+                    reader1.onload = function () {
+                        jsonData['attachment'] = {
+                            content: reader1.result.split(',')[1],
+                            contentType: fileInput1.type,
+                            fileName: fileInput1.name
+                        };
+                        checkAndSend();
+                    };
+                    reader1.readAsDataURL(fileInput1);
+                } else {
+                    checkAndSend();
+                }
+
+                if (fileInput2) {
+                    const reader2 = new FileReader();
+                    reader2.onload = function () {
+                        jsonData['attachment2'] = {
+                            content: reader2.result.split(',')[1],
+                            contentType: fileInput2.type,
+                            fileName: fileInput2.name
+                        };
+                        checkAndSend();
+                    };
+                    reader2.readAsDataURL(fileInput2);
+                } else {
+                    checkAndSend();
+                }
+            };
+
+            handleFiles();
         });
 
         function sendToPowerAutomate(data) {
@@ -221,15 +206,15 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                showThankYouMessage();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showThankYouMessage();
-            });
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    showThankYouMessage();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showThankYouMessage();
+                });
         }
 
         function showThankYouMessage() {
@@ -238,5 +223,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>
