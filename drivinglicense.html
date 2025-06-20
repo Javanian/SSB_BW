@@ -6,6 +6,51 @@
     <title>Driving License SSB</title>
     <style>
         body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+ 
+    .notice-container {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 24px 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      max-width: 500px;
+      text-align: center;
+      animation: popIn 0.4s ease-out;
+    }
+ 
+    .notice-container h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+ 
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+ 
+    @media (max-width: 600px) {
+      .notice-container {
+        padding: 20px;
+        font-size: 0.95rem;
+      }
+    }
+
+        body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -66,13 +111,21 @@
     </style>
 </head>
 <body>
-    <div class="form-container active" id="formContainer">
+    <div class="notice-container">
+    <h2>⏳ Pemberitahuan</h2>
+    <p>Aplikasi sedang dalam proses <strong>maintenance</strong> hingga pukul <strong>13.00 WIB</strong>.</p>
+    <p>Mohon maaf atas ketidaknyamanannya 🙏</p>
+  </div>
+    <div class="form-container none" id="formContainer">
         <form id="myForm">
             <label for="textInput1">Nama Karyawan:</label>
             <input type="text" id="textInput1" name="textInput1" required>
 
             <label for="textInput2">SN Karyawan:</label>
             <input type="text" id="textInput2" name="textInput2" required>
+
+            <label for="textInput3">Email Pribadi:</label>
+            <input type="text" id="textInput3" name="textInput3" required>
 
             <label for="choice3">Area:</label>
             <select id="choice3" name="choice3" required>
@@ -105,26 +158,26 @@
             <option value="VENDOR">VENDOR</option>
             </select>
 
-            <label for="choice2">Jenis Surat:</label>
+            <label for="choice2">Jenis SIM:</label>
             <select id="choice2" name="choice2" required>
                 <option value="">Select...</option>
                 <option value="SIM A">SIM A</option>
             <option value="SIM B">SIM B</option>
             <option value="SIM C">SIM C</option>
-            <option value="STNK">STNK</option>
             </select>
 
-
-
-            <label for="attachment">Lampiran Foto Surat:</label>
+            
+            <label for="attachment">Lampiran Foto SIM:</label>
             <input type="file" id="attachment" name="attachment" required>
+            <label for="attachment">Lampiran Foto STNK:</label>
+            <input type="file" id="attachment2" name="attachment2" required>
 
             <button type="submit">Submit</button>
         </form>
     </div>
 
     <div class="thank-you" id="thankYouContainer">
-        <h2>MANTAP!</h2>
+        <h2>TERIMAKASIH!</h2>
         <p>LAPORAN SUDAH TERKIRIM.</p>
     </div>
 
@@ -139,7 +192,7 @@
             const fileInput = formData.get('attachment');
 
             formData.forEach((value, key) => {
-                if (key !== 'attachment') {
+                if (key !== 'attachment'&& key !== 'attachment2') {
                     jsonData[key] = value;
                 }
             });
@@ -186,5 +239,4 @@
     </script>
 </body>
 </html>
-
 
