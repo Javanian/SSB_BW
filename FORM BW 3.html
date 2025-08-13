@@ -141,6 +141,28 @@ button:hover {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+/* Popup overlay */
+#imagePopup {
+    display: none; /* awalnya hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8); /* latar belakang gelap */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Gambar di popup */
+#imagePopup img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
 
     </style>
 </head>
@@ -171,6 +193,10 @@ button:hover {
     <div id="image-box">
         <p>No image selected</p> <!-- Placeholder text, will be replaced with the image -->
     </div>
+    <!-- Popup image container -->
+<div id="imagePopup" onclick="hidePopup()">
+    <img src="" alt="Popup Image" id="popupImg">
+</div>
 
     <script>
         let globalData = [];
@@ -213,7 +239,8 @@ button:hover {
                     - CONFIRMATION NO   : ${item.st_confirmation_no}<br>
                     - ACTIVITY          : ${item.st_operation_short_text}<br>
                     - IDPROD            : ${item.ssb_idprod}<br>
-                    <button onclick="showImage('${item.st_employeid}', '${item.st_confirmation_no}')">Show Image</button>
+                    <button onclick="showImage('${item.st_employeid}', '${item.st_confirmation_no}')">Show barcode</button>
+                    <button onclick="showImageQR('${item.st_employeid}', '${item.st_confirmation_no}')">Show QR</button>
                 </div><br>
             `;
         }).join('');
@@ -231,17 +258,38 @@ button:hover {
         displayResults(filtered);
     }
 
+   // function showImage(st_employeid, st_confirmation_no) {
+      //  const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
+      //  const imageBox = document.getElementById('image-box');
+      //  const img = document.createElement('img');
+      //  img.src = imageUrl;
+      //  img.alt = `Image for ${st_employeid} & ${st_confirmation_no}`;
+      //  img.style.width = '100%';
+      //  img.style.height = 'auto';
+      //  imageBox.innerHTML = '';
+      //  imageBox.appendChild(img);
+    //}
+
     function showImage(st_employeid, st_confirmation_no) {
-        const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
-        const imageBox = document.getElementById('image-box');
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = `Image for ${st_employeid} & ${st_confirmation_no}`;
-        img.style.width = '100%';
-        img.style.height = 'auto';
-        imageBox.innerHTML = '';
-        imageBox.appendChild(img);
-    }
+    const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
+    const popup = document.getElementById('imagePopup');
+    const popupImg = document.getElementById('popupImg');
+    popupImg.src = imageUrl;
+    popup.style.display = 'flex'; // munculkan popup
+}
+
+function showImageQR(st_employeid, st_confirmation_no) {
+    const imageUrl = `https://barcodeapi.org/api/qr/${st_employeid}%25${st_confirmation_no}?`;
+    const popup = document.getElementById('imagePopup');
+    const popupImg = document.getElementById('popupImg');
+    popupImg.src = imageUrl;
+    popup.style.display = 'flex'; // munculkan popup
+}
+
+
+function hidePopup() {
+    document.getElementById('imagePopup').style.display = 'none';
+}
     </script>
 </div>
 
