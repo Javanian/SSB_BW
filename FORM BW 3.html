@@ -6,54 +6,142 @@
     <title>Two Tab Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-        }
-        .tabs {
-            display: flex;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-        }
-        .tab.active {
-            background-color: #ddd;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-        .button-grid button {
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button-grid button:hover {
-            background-color: #0056b3;
-        }
-        .image-box {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .image-box img {
-            max-width: 100%;
-            height: auto;
-        }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 15px;
+    background-color: #e9ecef;
+    border: none;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    color: #555;
+}
+
+.tab:hover {
+    background-color: #d6d8db;
+}
+
+.tab.active {
+    background-color: #007bff;
+    color: white;
+    border-bottom: 2px solid white;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+form {
+    margin-top: 10px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+input[type="text"] {
+    padding: 8px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#searchInput {
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+}
+
+#response {
+    background: #f1f3f5;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.result-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.button-grid button {
+    padding: 10px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.button-grid button:hover {
+    background-color: #5a6268;
+}
+
+.image-box img, 
+#imageBox img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
     </style>
 </head>
 <body>
