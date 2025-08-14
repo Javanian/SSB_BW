@@ -1,202 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Tab Form</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f8f9fa;
-    color: #333;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
 
-.tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #ccc;
-}
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+        }
 
-.tab {
-    flex: 1;
-    text-align: center;
-    padding: 12px 15px;
-    background-color: #e9ecef;
-    border: none;
-    border-radius: 5px 5px 0 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
-    color: #555;
-}
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 15px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            color: #555;
+        }
 
-.tab:hover {
-    background-color: #d6d8db;
-}
+        .tab:hover {
+            background-color: #d6d8db;
+        }
 
-.tab.active {
-    background-color: #007bff;
-    color: white;
-    border-bottom: 2px solid white;
-}
+        .tab.active {
+            background-color: #007bff;
+            color: white;
+            border-bottom: 2px solid white;
 
-.tab-content {
-    display: none;
-    padding: 20px;
-    
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+        }
 
-.tab-content.active {
-    display: block;
-}
+        .tab-content {
+            display: none;
+            padding: 20px;
 
-form {
-    margin-top: 10px;
-}
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-form label {
-    font-weight: bold;
-}
-
-input[type="text"] {
-    padding: 8px;
-    margin: 5px 0 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 200px;
-}
-
-button {
-    padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-#searchInput {
-    padding: 8px;
-    margin: 5px 0 15px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 250px;
-}
-
-#response {
-    background: #f1f3f5;
-    padding: 10px;
-    border-radius: 5px;
-    max-height: 400px;
-    overflow-y: auto;
-    font-family: monospace;
-    font-size: 14px;
-}
-
-.result-item {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    background-color: white;
-    border-radius: 5px;
-    margin-bottom: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.button-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-}
-
-.button-grid button {
-    padding: 10px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
-
-.button-grid button:hover {
-    background-color: #5a6268;
-}
-
-.image-box img, 
-#imageBox img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-/* Popup overlay */
-#imagePopup {
-    display: none; /* awalnya hidden */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8); /* latar belakang gelap */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* Gambar di popup */
-#imagePopup img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-}
+        .tab-content.active {
+            display: block;
 
 
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        form label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #searchInput {
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+        }
+
+        #response {
+            background: #f1f3f5;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .button-grid button {
+            padding: 10px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .button-grid button:hover {
+            background-color: #5a6268;
+        }
+
+        .image-box img,
+        #imageBox img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Popup overlay */
+        #imagePopup {
+            display: none;
+            /* awalnya hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            /* latar belakang gelap */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Gambar di popup */
+        #imagePopup img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
+
 <body>
+    <h2>TIMESHEET SSB</h2>
+    <div class="tabs">
 
-<div class="tabs">
-    <div class="tab active" onclick="switchTab('page1')">PRODUCTIVE</div>
-    <div class="tab" onclick="switchTab('page2')">UNPRODUCTIVE</div>
-</div>
+        <div class="tab active" onclick="switchTab('page1')">PRODUCTIVE</div>
+        <div class="tab" onclick="switchTab('page2')">UNPRODUCTIVE</div>
+    </div>
 
-<div id="page1" class="tab-content active">
-    <h2>PRODUCTIVE</h2>
-    <p>ss.</p>
-    <h2>TIMESHEET SSB BW</h2>
-    <form id="snForm">
-        <label for="sn">Enter SN:</label>
-        <input type="text" id="sn" name="sn" required>
-        <button type="button" onclick="sendData()">Submit</button>
-    </form>
-<br><br><br>
-<label for="searchInput">Search:</label>
-<input type="text" id="searchInput" oninput="filterResults()" placeholder="Search job...">
+    <div id="page1" class="tab-content active">
+        <h3>PRODUCTIVE</h3>
 
-    <h3>Response:</h3>
-    <div id="response"></div>
+        <form id="snForm">
+            <label for="sn">Enter SN:</label>
+            <input type="text" id="sn" name="sn" required>
+            <button type="button" onclick="sendData()">Submit</button>
+        </form>
 
-    <h3>Selected Image:</h3>
+        <label for="searchInput">Search:</label>
+        <input type="text" id="searchInput" oninput="filterResults()" placeholder="Search job...">
+
+
+        <div id="response"></div>
+
+        <!-- <h3>Selected Image:</h3>
     <div id="image-box">
-        <p>No image selected</p> <!-- Placeholder text, will be replaced with the image -->
+        <p>No image selected</p>  -->
+        <!-- Placeholder text, will be replaced with the image -->
     </div>
     <!-- Popup image container -->
-<div id="imagePopup" onclick="hidePopup()">
-    <img src="" alt="Popup Image" id="popupImg">
-</div>
+    <div id="imagePopup" onclick="hidePopup()">
+        <img src="" alt="Popup Image" id="popupImg">
+    </div>
 
     <script>
         let globalData = [];
@@ -220,17 +227,17 @@ button:hover {
 
                 const data = await response.json();
                 globalData = Array.isArray(data) ? data : [];
-            displayResults(globalData);
+                displayResults(globalData);
 
-                } catch (error) {
-            responseDiv.innerText = `Error: ${error.message}`;
+            } catch (error) {
+                responseDiv.innerText = `Error: ${error.message}`;
+            }
         }
-    }
 
-    function displayResults(data) {
-        const responseDiv = document.getElementById('response');
-        responseDiv.innerHTML = data.map((item, index) => {
-            return `
+        function displayResults(data) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = data.map((item, index) => {
+                return `
                 <div class="result-item">
                     Row ${index + 1}:<br>
                     - ID                : ${item.st_employeid}<br>
@@ -243,109 +250,115 @@ button:hover {
                     <button onclick="showImageQR('${item.st_employeid}', '${item.st_confirmation_no}')">Show QR</button>
                 </div><br>
             `;
-        }).join('');
-    }
+            }).join('');
+        }
 
-    function filterResults() {
-        const keyword = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = globalData.filter(item =>
-            item.st_employeid?.toLowerCase().includes(keyword) ||
-            item.st_order_no?.toLowerCase().includes(keyword) ||
-            item.st_order_description?.toLowerCase().includes(keyword) ||
-            item.st_confirmation_no?.toLowerCase().includes(keyword) ||
-            item.st_operation_short_text?.toLowerCase().includes(keyword)
-        );
-        displayResults(filtered);
-    }
+        function filterResults() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = globalData.filter(item =>
+                item.st_employeid?.toLowerCase().includes(keyword) ||
+                item.st_order_no?.toLowerCase().includes(keyword) ||
+                item.st_order_description?.toLowerCase().includes(keyword) ||
+                item.st_confirmation_no?.toLowerCase().includes(keyword) ||
+                item.st_operation_short_text?.toLowerCase().includes(keyword)
+            );
+            displayResults(filtered);
+        }
 
-   // function showImage(st_employeid, st_confirmation_no) {
-      //  const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
-      //  const imageBox = document.getElementById('image-box');
-      //  const img = document.createElement('img');
-      //  img.src = imageUrl;
-      //  img.alt = `Image for ${st_employeid} & ${st_confirmation_no}`;
-      //  img.style.width = '100%';
-      //  img.style.height = 'auto';
-      //  imageBox.innerHTML = '';
-      //  imageBox.appendChild(img);
-    //}
+        // function showImage(st_employeid, st_confirmation_no) {
+        //  const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
+        //  const imageBox = document.getElementById('image-box');
+        //  const img = document.createElement('img');
+        //  img.src = imageUrl;
+        //  img.alt = `Image for ${st_employeid} & ${st_confirmation_no}`;
+        //  img.style.width = '100%';
+        //  img.style.height = 'auto';
+        //  imageBox.innerHTML = '';
+        //  imageBox.appendChild(img);
+        //}
 
-    function showImage(st_employeid, st_confirmation_no) {
-    const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
-    const popup = document.getElementById('imagePopup');
-    const popupImg = document.getElementById('popupImg');
-    popupImg.src = imageUrl;
-    popup.style.display = 'flex'; // munculkan popup
-}
+        function showImage(st_employeid, st_confirmation_no) {
+            const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
+            const popup = document.getElementById('imagePopup');
+            const popupImg = document.getElementById('popupImg');
+            popupImg.src = imageUrl;
+            popup.style.display = 'flex'; // munculkan popup
+        }
 
-function showImageQR(st_employeid, st_confirmation_no) {
-    const imageUrl = `https://barcodeapi.org/api/qr/${st_employeid}%25${st_confirmation_no}?`;
-    const popup = document.getElementById('imagePopup');
-    const popupImg = document.getElementById('popupImg');
-    popupImg.src = imageUrl;
-    popup.style.display = 'flex'; // munculkan popup
-}
+        function showImageQR(st_employeid, st_confirmation_no) {
+            const imageUrl = `https://barcodeapi.org/api/qr/${st_employeid}%25${st_confirmation_no}?`;
+            const popup = document.getElementById('imagePopup');
+            const popupImg = document.getElementById('popupImg');
+            popupImg.src = imageUrl;
+            popup.style.display = 'flex'; // munculkan popup
+        }
 
 
-function hidePopup() {
-    document.getElementById('imagePopup').style.display = 'none';
-}
+        function hidePopup() {
+            document.getElementById('imagePopup').style.display = 'none';
+        }
     </script>
-</div>
-
-<div id="page2" class="tab-content">
-    <h2>UNPRODUCTIVE</h2>
-    <div class="button-grid">
-        <button onclick="generateImage('1510')">BRIEFING</button>
-        <button onclick="generateImage('1520')">COFFEE BREAKS</button>
-        <button onclick="generateImage('1530')">HOUSEKEEPING</button>
-        <button onclick="generateImage('1540')">TRAINING</button>
-        <button onclick="generateImage('1550')">WAITING FOR MATERIAL</button>
-        <button onclick="generateImage('1560')">WAITING FOR NCR</button>
-        <button onclick="generateImage('1570')">WAITING FOR ENGINEERING</button>
-        <button onclick="generateImage('1580')">WAITING FOR INSPECTION</button>
-        <button onclick="generateImage('1590')">WAITING FOR HANDLING</button>
-        <button onclick="generateImage('1610')">JIGS & FIXTURES</button>
-        <button onclick="generateImage('1620')">TOOL PREPARATION</button>
-        <button onclick="generateImage('1630')">MAINTENANCE</button>
-        <button onclick="generateImage('1640')">LABOUR NECESSITY</button>
-        <button onclick="generateImage('1650')">MACHINE / ELECTRICITY BREAKDOWN</button>
-        <button onclick="generateImage('1660')">DAILY PM</button>
-        <button onclick="generateImage('1670')">WAITING FOR JOB</button>
-        <button onclick="generateImage('1680')">OTHERS</button>
-        <button onclick="generateImage('')">SN BARCODES</button>
     </div>
-    <div class="image-box" id="imageBox">
-        <!-- Generated image will appear here -->
+
+    <div id="page2" class="tab-content">
+        <h3>UNPRODUCTIVE</h3>
+        <div class="button-grid">
+            <button onclick="generateImage('1510')">BRIEFING</button>
+            <button onclick="generateImage('1520')">COFFEE BREAKS</button>
+            <button onclick="generateImage('1530')">HOUSEKEEPING</button>
+            <button onclick="generateImage('1540')">TRAINING</button>
+            <button onclick="generateImage('1550')">WAITING FOR MATERIAL</button>
+            <button onclick="generateImage('1560')">WAITING FOR NCR</button>
+            <button onclick="generateImage('1570')">WAITING FOR ENGINEERING</button>
+            <button onclick="generateImage('1580')">WAITING FOR INSPECTION</button>
+            <button onclick="generateImage('1590')">WAITING FOR HANDLING</button>
+            <button onclick="generateImage('1610')">JIGS & FIXTURES</button>
+            <button onclick="generateImage('1620')">TOOL PREPARATION</button>
+            <button onclick="generateImage('1630')">MAINTENANCE</button>
+            <button onclick="generateImage('1640')">LABOUR NECESSITY</button>
+            <button onclick="generateImage('1650')">MACHINE / ELECTRICITY BREAKDOWN</button>
+            <button onclick="generateImage('1660')">DAILY PM</button>
+            <button onclick="generateImage('1670')">WAITING FOR JOB</button>
+            <button onclick="generateImage('1680')">OTHERS</button>
+            <button onclick="generateImage('')">SN BARCODES</button>
+        </div>
+        <div class="image-box" id="imageBox">
+
+        </div>
     </div>
-</div>
 
-<script>
-    function switchTab(tabId) {
-        // Hide all tab content
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
 
-        // Remove active class from all tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
 
-        // Show the selected tab content
-        document.getElementById(tabId).classList.add('active');
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active');
 
-        // Highlight the selected tab
-        event.target.classList.add('active');
-    }
+            // Highlight the selected tab
+            event.target.classList.add('active');
+        }
 
-    function generateImage(value) {
-        const snku = document.getElementById('sn').value || '';
-        const imageUrl = `https://barcodeapi.org/api/128/${snku}%25${value}`;
-        const imageBox = document.getElementById('imageBox');
-        imageBox.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
-    }
-</script>
+        function generateImage(value) {
+            const snku = document.getElementById('sn').value || '';
+            const imageUrl = `https://barcodeapi.org/api/128/${snku}%25${value}`;
+            // const imageBox = document.getElementById('imageBox');
+            //imageBox.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
+
+            const popup = document.getElementById('imagePopup');
+            const popupImg = document.getElementById('popupImg');
+            popupImg.src = imageUrl;
+            popup.style.display = 'flex'; // munculkan popup
+        }
+    </script>
 
 </body>
+
 </html>
