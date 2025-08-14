@@ -7,16 +7,16 @@
     <title>Two Tab Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
-        }
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0px;
+}
 
         .tabs {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 2px;
             border-bottom: 2px solid #ccc;
         }
 
@@ -44,15 +44,16 @@
 
         }
 
-        .tab-content {
-            display: none;
-            padding: 20px;
-
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+      .tab-content {
+    display: none;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 12px; 
+    min-height: 200px; 
+    animation: fadeIn 0.3s ease-in-out;
+}
 
         .tab-content.active {
             display: block;
@@ -73,11 +74,11 @@
             margin: 5px 0 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 200px;
+            min-width: 100px;
         }
 
         button {
-            padding: 8px 15px;
+            padding: 9px 17px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -149,26 +150,69 @@
         /* Popup overlay */
         #imagePopup {
             display: none;
-            /* awalnya hidden */
+            
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
-            /* latar belakang gelap */
+            
             justify-content: center;
             align-items: center;
             z-index: 9999;
         }
 
-        /* Gambar di popup */
+        
         #imagePopup img {
             max-width: 100%;
             max-height: 100%;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
+
+        .result-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; 
+}
+
+
+.result-table th {
+    background-color: #f0f0f0;
+    text-align: left;
+    padding: 8px;
+    font-weight: bold;
+}
+
+.result-table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    word-wrap: break-word; 
+}
+
+.result-table .label {
+    width: 200px; 
+    background-color: #fafafa;
+    font-weight: bold;
+}
+.result-table th.center-header {
+    text-align: center !important;  
+    vertical-align: middle !important;
+}
+.button-container {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;          
+}
+
+.button-container button {
+    flex: 1;            
+    padding: 10px;      
+    box-sizing: border-box;
+}
+
     </style>
 </head>
 
@@ -184,21 +228,18 @@
         <h3>PRODUCTIVE</h3>
 
         <form id="snForm">
-            <label for="sn">Enter SN:</label>
-            <input type="text" id="sn" name="sn" required>
+            <label for="sn"></label>
+            <input type="text" id="sn" name="sn" required placeholder="SN Karyawan . . .">
             <button type="button" onclick="sendData()">Submit</button>
         </form>
 
-        <label for="searchInput">Search:</label>
+        <label for="searchInput"></label>
         <input type="text" id="searchInput" oninput="filterResults()" placeholder="Search job...">
 
 
         <div id="response"></div>
 
-        <!-- <h3>Selected Image:</h3>
-    <div id="image-box">
-        <p>No image selected</p>  -->
-        <!-- Placeholder text, will be replaced with the image -->
+
     </div>
     <!-- Popup image container -->
     <div id="imagePopup" onclick="hidePopup()">
@@ -234,25 +275,30 @@
             }
         }
 
-        function displayResults(data) {
-            const responseDiv = document.getElementById('response');
-            responseDiv.innerHTML = data.map((item, index) => {
-                return `
-                <div class="result-item">
-                    Row ${index + 1}:<br>
-                    - ID                : ${item.st_employeid}<br>
-                    - PRODUCTION ORDER  : ${item.st_order_no}<br>
-                    - JOB DESCRIPTION   : ${item.st_order_description}<br>
-                    - CONFIRMATION NO   : ${item.st_confirmation_no}<br>
-                    - ACTIVITY          : ${item.st_operation_short_text}<br>
-                    - IDPROD            : ${item.ssb_idprod}<br>
-                    <button onclick="showImage('${item.st_employeid}', '${item.st_confirmation_no}')">Show barcode</button>
-                    <button onclick="showImageQR('${item.st_employeid}', '${item.st_confirmation_no}')">Show QR</button>
-                </div><br>
-            `;
-            }).join('');
-        }
+ function displayResults(data) {
+    const responseDiv = document.getElementById('response');
 
+    responseDiv.innerHTML = data.map((item, index) => {
+        return `
+        <div class="result-item">
+            <table class="result-table">  
+                <tr><th class="center-header" colspan="2">${item.st_order_description}</th></tr>
+                <tr><td class="label">ID</td><td>${item.st_employeid}</td></tr>
+                <tr><td class="label">PRODUCTION ORDER</td><td>${item.st_order_no}</td></tr>
+                <tr><td class="label">CONFIRMATION NO</td><td>${item.st_confirmation_no}</td></tr>
+                <tr><td class="label">ACTIVITY</td><td>${item.st_operation_short_text}</td></tr>
+                <tr><td class="label">IDPROD</td><td>${item.ssb_idprod}</td></tr>
+                
+            </table>
+            <div class="button-container">
+                <button onclick="showImage('${item.st_employeid}', '${item.st_confirmation_no}')">Show barcode</button>
+                <button onclick="showImageQR('${item.st_employeid}', '${item.st_confirmation_no}')">Show QR</button>
+            </div>
+        </div><br>
+        `;
+    }).join('');
+}
+        //<!-- <tr><th colspan="2">Row ${index + 1}</th></tr> -->
         function filterResults() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
             const filtered = globalData.filter(item =>
@@ -265,20 +311,9 @@
             displayResults(filtered);
         }
 
-        // function showImage(st_employeid, st_confirmation_no) {
-        //  const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
-        //  const imageBox = document.getElementById('image-box');
-        //  const img = document.createElement('img');
-        //  img.src = imageUrl;
-        //  img.alt = `Image for ${st_employeid} & ${st_confirmation_no}`;
-        //  img.style.width = '100%';
-        //  img.style.height = 'auto';
-        //  imageBox.innerHTML = '';
-        //  imageBox.appendChild(img);
-        //}
-
         function showImage(st_employeid, st_confirmation_no) {
-            const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?`;
+            const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?&dpi=200&height=30&text=none`;
+            
             const popup = document.getElementById('imagePopup');
             const popupImg = document.getElementById('popupImg');
             popupImg.src = imageUrl;
@@ -362,3 +397,4 @@
 </body>
 
 </html>
+
