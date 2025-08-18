@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barcode Scanner Simple</title>
+</head>
+<body>
+  <h2>Barcode Scanner</h2>
+  <p style="color:gray; font-size:14px">⚠️ Catatan: Kamera hanya bisa diakses jika halaman ini dijalankan dari <b>HTTPS</b> atau <b>http://localhost</b>.</p>
+  <input id="barcodeInput" type="text" placeholder="Hasil scan" style="width:250px; padding:5px">
+  <button id="scanBtn">Mulai Scan</button>
+  <div id="preview" style="margin-top:10px; display:none">
+    <video id="video" width="300" height="200" style="border:1px solid #ccc"></video>
+  </div>
+
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <script>
+    const scanBtn = document.getElementById('scanBtn');
+    const inputEl = document.getElementById('barcodeInput');
+    const videoEl = document.getElementById('video');
+    const preview = document.getElementById('preview');
+
+    let codeReader;
+
+    scanBtn.addEventListener('click', async () => {
+      if(!codeReader){ codeReader = new ZXing.BrowserMultiFormatReader(); }
+      preview.style.display = 'block';
+      try{
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(d => d.kind === 'videoinput');
+        const deviceId = videoDevices.length ? videoDevices[0].deviceId : null;
+
+        if(!deviceId){
+          alert('Tidak ada kamera ditemukan');
+          return;
+        }
+
+        await codeReader.decodeFromVideoDevice(deviceId, videoEl, (result, err) => {
+          if(result){
+            inputEl.value = result.getText();
+            codeReader.reset();
+            preview.style.display = 'none';
+          }
+        });
+      }catch(err){
+        alert('Gagal akses kamera: ' + err);
+      }
+    });
+  </script>
+</body>
+</html>
