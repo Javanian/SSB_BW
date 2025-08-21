@@ -1,52 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Barcode Scanner Simple</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Reader</title>
 </head>
 <body>
-  <h2>Barcode Scanner</h2>
-  <p style="color:gray; font-size:14px">⚠️ Catatan: Kamera hanya bisa diakses jika halaman ini dijalankan dari <b>HTTPS</b> atau <b>http://localhost</b>.</p>
-  <input id="barcodeInput" type="text" placeholder="Hasil scan" style="width:250px; padding:5px">
-  <button id="scanBtn">Mulai Scan</button>
-  <div id="preview" style="margin-top:10px; display:none">
-    <video id="video" width="300" height="200" style="border:1px solid #ccc"></video>
-  </div>
+    <h1>NFC Reader</h1>
+    <p>Status: <span id="status">Memulai...</span></p>
+    
+    <h3>Hasil Scan NFC:</h3>
+    <textarea id="nfcResult" rows="10" cols="50" readonly placeholder="Hasil scan NFC akan muncul di sini..."></textarea>
+    
+    <br><br>
+    <button id="startBtn">Mulai Scan NFC</button>
+    <button id="clearBtn">Bersihkan</button>
+    
+    <h3>Log:</h3>
+    <textarea id="logArea" rows="5" cols="50" readonly></textarea>
 
-  <script src="https://unpkg.com/@zxing/library@latest"></script>
-  <script>
-    const scanBtn = document.getElementById('scanBtn');
-    const inputEl = document.getElementById('barcodeInput');
-    const videoEl = document.getElementById('video');
-    const preview = document.getElementById('preview');
-
-    let codeReader;
-
-    scanBtn.addEventListener('click', async () => {
-      if(!codeReader){ codeReader = new ZXing.BrowserMultiFormatReader(); }
-      preview.style.display = 'block';
-      try{
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(d => d.kind === 'videoinput');
-        const deviceId = videoDevices.length ? videoDevices[0].deviceId : null;
-
-        if(!deviceId){
-          alert('Tidak ada kamera ditemukan');
-          return;
+    <script>
+        const statusElement = document.getElementById('status');
+        const resultElement = document.getElementById('nfcResult');
+        const startBtn = document.getElementById('startBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const logArea = document.getElementById('logArea');
+        
+        let isScanning = false;
+        
+        // Fungsi untuk menambah log
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.value += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
         }
-
-        await codeReader.decodeFromVideoDevice(deviceId, videoEl, (result, err) => {
-          if(result){
-            inputEl.value = result.getText();
-            codeReader.reset();
-            preview.style.display = 'none';
-          }
+        
+        // Fungsi untuk memulai scan NFC
+        async function startNFCReading() {
+            try {
+                // Cek apakah browser mendukung Web NFC
+                if (!('NDEFReader' in window)) {
+                    statusElement.textContent = 'NFC tidak didukung browser ini';
+                    addLog('Error: Browser tidak mendukung Web NFC API');
+                    return;
+                }
+                
+                statusElement.textContent = 'Meminta izin NFC...';
+                addLog('Meminta izin untuk menggunakan NFC...');
+                
+                const ndef = new NDEFReader();
+                
+                // Mulai scan
+                await ndef.scan();
+                
+                statusElement.textContent = 'Scanning NFC... Dekatkan tag NFC';
+                addLog('NFC Scanner aktif - menunggu tag NFC...');
+                isScanning = true;
+                startBtn.textContent = 'Scanning...';
+                startBtn.disabled = true;
+                
+                // Event listener untuk membaca NFC
+                ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    addLog(`Tag NFC terdeteksi! Serial: ${serialNumber}`);
+                    
+                    let nfcData = `=== NFC Tag Detected ===\n`;
+                    nfcData += `Serial Number: ${serialNumber}\n`;
+                    nfcData += `Timestamp: ${new Date().toLocaleString()}\n\n`;
+                    
+                    // Membaca semua record dalam message
+                    for (const record of message.records) {
+                        nfcData += `Record Type: ${record.recordType}\n`;
+                        nfcData += `Media Type: ${record.mediaType || 'N/A'}\n`;
+                        nfcData += `ID: ${record.id || 'N/A'}\n`;
+                        
+                        // Decode data berdasarkan tipe
+                        if (record.recordType === "text") {
+                            const textDecoder = new TextDecoder(record.encoding);
+                            const text = textDecoder.decode(record.data);
+                            nfcData += `Text: ${text}\n`;
+                        } else if (record.recordType === "url") {
+                            const textDecoder = new TextDecoder();
+                            const url = textDecoder.decode(record.data);
+                            nfcData += `URL: ${url}\n`;
+                        } else {
+                            // Data raw dalam hex
+                            const dataArray = new Uint8Array(record.data);
+                            const hexData = Array.from(dataArray)
+                                .map(byte => byte.toString(16).padStart(2, '0'))
+                                .join(' ');
+                            nfcData += `Raw Data (hex): ${hexData}\n`;
+                        }
+                        nfcData += `\n`;
+                    }
+                    
+                    nfcData += `\n${'='.repeat(30)}\n\n`;
+                    
+                    // Tambahkan ke textbox (hasil terbaru di atas)
+                    resultElement.value = nfcData + resultElement.value;
+                    
+                    statusElement.textContent = 'Tag dibaca! Scanning berlanjut...';
+                });
+                
+                // Event listener untuk error saat reading
+                ndef.addEventListener("readingerror", () => {
+                    addLog('Error saat membaca NFC tag');
+                    statusElement.textContent = 'Error membaca tag - Scanning berlanjut...';
+                });
+                
+            } catch (error) {
+                console.error('NFC Error:', error);
+                statusElement.textContent = `Error: ${error.message}`;
+                addLog(`Error: ${error.message}`);
+                startBtn.textContent = 'Mulai Scan NFC';
+                startBtn.disabled = false;
+                isScanning = false;
+            }
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', () => {
+            if (!isScanning) {
+                startNFCReading();
+            }
         });
-      }catch(err){
-        alert('Gagal akses kamera: ' + err);
-      }
-    });
-  </script>
+        
+        clearBtn.addEventListener('click', () => {
+            resultElement.value = '';
+            logArea.value = '';
+            addLog('Data dibersihkan');
+        });
+        
+        // Inisialisasi
+        addLog('Aplikasi NFC Reader dimuat');
+        addLog('Klik "Mulai Scan NFC" untuk memulai');
+        
+        // Cek dukungan NFC saat halaman dimuat
+        if (!('NDEFReader' in window)) {
+            statusElement.textContent = 'NFC tidak didukung';
+            startBtn.disabled = true;
+            addLog('Browser tidak mendukung Web NFC API');
+        }
+    </script>
 </body>
 </html>
