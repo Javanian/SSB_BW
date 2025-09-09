@@ -5,9 +5,9 @@
   <title>Scan NFC - UserNFC</title>
 </head>
 <body>
-  <h1>Scan NFC 2</h1>
+  <h1>Scan NFC 3</h1>
 
-  <button id="btnScan">Mulai Scan NFC 2</button>
+  <button id="btnScan">Mulai Scan NFC 3</button>
   <button id="btnStop" disabled>Stop Scan</button>
 
   <div>
@@ -25,12 +25,11 @@
 
   <script>
     // ===================== KONFIGURASI =====================
+// ===================== KONFIG =====================
 const API_BASE_URL = "https://playback-pubmed-chosen-additionally.trycloudflare.com";
-// Endpoint akhir yang dipanggil akan menjadi:
-// https://playback-pubmed-chosen-additionally.trycloudflare.com/usernfc/nfcid/"42:b7:db:69"
-// (di jaringan, browser akan mengirim versi ter-encode: %22 = " dan %3A = :)
+// Route server: router.get("/nfcid/:nfcid", controller.getdatausernfc);
 
-// ===================== ELEMENT UI ======================
+// ===================== ELEMENT UI =================
 const btnScan = document.getElementById("btnScan");
 const btnStop = document.getElementById("btnStop");
 const statusEl = document.getElementById("status");
@@ -38,16 +37,15 @@ const infoBox = document.getElementById("infoBox");
 const nfcIdDisplay = document.getElementById("nfcIdDisplay");
 const resultView = document.getElementById("resultView");
 
-// ===================== STATE ===========================
+// ===================== STATE ======================
 let reader = null;
 let scanning = false;
 let clearInfoTimer = null;
 
-// ===================== UTIL/UI =========================
+// ===================== UTIL =======================
 function setStatus(text) {
   statusEl.textContent = "Status: " + text;
 }
-
 function showInfo(text, autoClearMs = 2000) {
   infoBox.value = text || "";
   if (clearInfoTimer) clearTimeout(clearInfoTimer);
@@ -55,21 +53,16 @@ function showInfo(text, autoClearMs = 2000) {
     clearInfoTimer = setTimeout(() => (infoBox.value = ""), autoClearMs);
   }
 }
-
 function showResult(obj) {
   resultView.textContent = obj ? JSON.stringify(obj, null, 2) : "-";
 }
 
-// Bangun URL sesuai route: /usernfc/nfcid/:nfcid
-// PERMINTAAN: nilai :nfcid DIKIRIM DENGAN TANDA KUTIP, mis. "42:b7:db:69"
+// Buat URL TANPA encodeURIComponent, dengan nfcid ber-kutip
 function buildUserUrl(nfcidRaw) {
-  // pastikan string
-  const asString = String(nfcidRaw);
-  // bungkus dengan tanda kutip
-  const quoted = `"${asString}"`;
-  // encode untuk aman di path param
-  const encoded = encodeURIComponent(quoted);
-  return `${API_BASE_URL}/usernfc/nfcid/${encoded}`;
+  const asString = String(nfcidRaw);     // pastikan string
+  const quoted   = `"${asString}"`;      // tambahkan tanda kutip
+  // langsung tempel ke path
+  return `${API_BASE_URL}/usernfc/nfcid/${quoted}`;
 }
 
 // Decode TextRecord jika serialNumber kosong
@@ -82,10 +75,10 @@ function decodeTextRecord(record) {
   }
 }
 
-// Ambil ID NFC dari event: prefer serialNumber, fallback ke TextRecord
+// Ambil ID NFC: prefer serialNumber, fallback ke TextRecord
 function extractNfcIdFromReading(event) {
   if (event.serialNumber && event.serialNumber.trim() !== "") {
-    return event.serialNumber.trim(); // biasanya format "xx:xx:xx:xx"
+    return event.serialNumber.trim();
   }
   const records = event.message?.records || [];
   for (const rec of records) {
@@ -97,24 +90,22 @@ function extractNfcIdFromReading(event) {
   return "";
 }
 
-// ===================== API CALL ========================
+// Panggil API (server balikin rows[0] atau null)
 async function fetchUserByNfcId(nfcidRaw) {
   const url = buildUserUrl(nfcidRaw);
+  console.log("Fetch URL:", url); // debug
   const res = await fetch(url, { method: "GET" });
-
-  // Controller kamu: res.json(result.rows[0]);
-  // Jadi "tidak ditemukan" = data null/undefined (bukan 404).
   if (!res.ok) {
+    // kalau error HTTP, lempar supaya ketangkep di catch
     const text = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status}: ${text}`);
   }
-
   const data = await res.json().catch(() => null);
   const found = !!(data && Object.keys(data).length > 0);
-  return { found, data: found ? data : null, urlUsed: url };
+  return { found, data: found ? data : null };
 }
 
-// ===================== NFC LOGIC =======================
+// ===================== NFC LOGIC ==================
 async function startScan() {
   if (!("NDEFReader" in window)) {
     setStatus("Browser tidak mendukung Web NFC.");
@@ -138,10 +129,12 @@ async function startScan() {
       showInfo("");
       showResult(null);
 
-      // 1) Ambil NFC ID lalu pastikan string
+      // 1) Ambil NFC ID sebagai string
       const rawNfcId = extractNfcIdFromReading(event);
-      const asString = String(rawNfcId); // *pastikan string*
-      nfcIdDisplay.textContent = `"${asString}"`; // tampilkan versi ber-kutip biar match API
+      const asString = String(rawNfcId);
+
+      // tampilkan di UI dalam bentuk ber-kutip biar sama dengan yang dikirim
+      nfcIdDisplay.textContent = `"${asString}"`;
 
       if (!asString) {
         setStatus("ID NFC kosong, coba tag lain.");
@@ -150,14 +143,13 @@ async function startScan() {
       }
 
       try {
-        // 2) Panggil API dengan nfcid yang akan DIKIRIM BER-KUTIP
-        const { found, data /*, urlUsed*/ } = await fetchUserByNfcId(asString);
+        // 2) Call API dgn nfcid ber-kutip & tanpa encode
+        const { found, data } = await fetchUserByNfcId(asString);
 
         if (found) {
           setStatus("Data karyawan ditemukan.");
           showResult(data);
-
-          // 3) SIMPAN KE SESSIONSTORAGE AGAR BISA DIPAKAI DI PAGE LAIN
+          // 3) Simpan ke sessionStorage untuk dipakai di halaman lain
           sessionStorage.setItem("datakaryawan", JSON.stringify(data));
         } else {
           setStatus("Karyawan tidak ditemukan.");
@@ -170,7 +162,6 @@ async function startScan() {
         showInfo("Gagal memanggil API: " + err.message, 2000);
         sessionStorage.removeItem("datakaryawan");
       } finally {
-        // 4) Biarkan tetap listen untuk scan berikutnya
         setStatus("Scanning... tempelkan tag NFC berikutnya");
       }
     };
@@ -190,7 +181,7 @@ function stopScan() {
   setStatus("Scan dihentikan.");
 }
 
-// ===================== EVENT UI =======================
+// ===================== EVENT UI ==================
 btnScan.addEventListener("click", () => {
   if (!scanning) startScan();
 });
@@ -201,8 +192,10 @@ btnStop.addEventListener("click", () => {
 
 
 
+
   </script>
 </body>
 </html>
+
 
 
