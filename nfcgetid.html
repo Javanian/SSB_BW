@@ -5,9 +5,9 @@
   <title>Scan NFC - UserNFC</title>
 </head>
 <body>
-  <h1>Scan NFC 3</h1>
+  <h1>Scan NFC 1</h1>
 
-  <button id="btnScan">Mulai Scan NFC 3</button>
+  <button id="btnScan">Mulai Scan NFC 1</button>
   <button id="btnStop" disabled>Stop Scan</button>
 
   <div>
@@ -24,8 +24,7 @@
   <pre id="resultView">-</pre>
 
   <script>
-    // ===================== KONFIGURASI =====================
-// ===================== KONFIG =====================
+   // ===================== KONFIG =====================
 const API_BASE_URL = "https://playback-pubmed-chosen-additionally.trycloudflare.com";
 // Route server: router.get("/nfcid/:nfcid", controller.getdatausernfc);
 
@@ -57,19 +56,17 @@ function showResult(obj) {
   resultView.textContent = obj ? JSON.stringify(obj, null, 2) : "-";
 }
 
-// Buat URL TANPA encodeURIComponent, dengan nfcid ber-kutip
+// Buat URL TANPA encode, TANPA kutip
 function buildUserUrl(nfcidRaw) {
-  const asString = String(nfcidRaw);     // pastikan string
-  const quoted   = `"${asString}"`;      // tambahkan tanda kutip
-  // langsung tempel ke path
-  return `${API_BASE_URL}/usernfc/nfcid/${quoted}`;
+  const asString = String(nfcidRaw);      // pastikan string
+  return `${API_BASE_URL}/usernfc/nfcid/${asString}`;
 }
 
 // Decode TextRecord jika serialNumber kosong
 function decodeTextRecord(record) {
   try {
-    const textDecoder = new TextDecoder(record.encoding || "utf-8");
-    return textDecoder.decode(record.data);
+    const dec = new TextDecoder(record.encoding || "utf-8");
+    return dec.decode(record.data);
   } catch {
     return "";
   }
@@ -78,25 +75,24 @@ function decodeTextRecord(record) {
 // Ambil ID NFC: prefer serialNumber, fallback ke TextRecord
 function extractNfcIdFromReading(event) {
   if (event.serialNumber && event.serialNumber.trim() !== "") {
-    return event.serialNumber.trim();
+    return event.serialNumber.trim(); // contoh: 42:b7:db:69
   }
   const records = event.message?.records || [];
   for (const rec of records) {
     if (rec.recordType === "text") {
-      const val = decodeTextRecord(rec).trim();
-      if (val) return val;
+      const v = decodeTextRecord(rec).trim();
+      if (v) return v;
     }
   }
   return "";
 }
 
-// Panggil API (server balikin rows[0] atau null)
+// Panggil API (controller kirim rows[0] atau null)
 async function fetchUserByNfcId(nfcidRaw) {
   const url = buildUserUrl(nfcidRaw);
   console.log("Fetch URL:", url); // debug
   const res = await fetch(url, { method: "GET" });
   if (!res.ok) {
-    // kalau error HTTP, lempar supaya ketangkep di catch
     const text = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status}: ${text}`);
   }
@@ -129,12 +125,11 @@ async function startScan() {
       showInfo("");
       showResult(null);
 
-      // 1) Ambil NFC ID sebagai string
+      // 1) Ambil NFC ID sebagai string (tanpa kutip)
       const rawNfcId = extractNfcIdFromReading(event);
       const asString = String(rawNfcId);
 
-      // tampilkan di UI dalam bentuk ber-kutip biar sama dengan yang dikirim
-      nfcIdDisplay.textContent = `"${asString}"`;
+      nfcIdDisplay.textContent = asString || "-";
 
       if (!asString) {
         setStatus("ID NFC kosong, coba tag lain.");
@@ -143,7 +138,7 @@ async function startScan() {
       }
 
       try {
-        // 2) Call API dgn nfcid ber-kutip & tanpa encode
+        // 2) Call API dgn nfcid apa adanya (contoh: .../nfcid/42:b7:db:69)
         const { found, data } = await fetchUserByNfcId(asString);
 
         if (found) {
@@ -191,11 +186,10 @@ btnStop.addEventListener("click", () => {
 
 
 
-
-
   </script>
 </body>
 </html>
+
 
 
 
