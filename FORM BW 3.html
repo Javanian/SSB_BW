@@ -383,7 +383,9 @@
 
         function generateImage(value) {
             const snku = document.getElementById('sn').value || '';
-            const imageUrl = `https://barcodeapi.org/api/128/${snku}%25${value}`;
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on`;
+            //`https://barcodeapi.org/api/128/${snku}%25${value}`;
+            //https://barcode.tec-it.com/barcode.ashx?data=jobticket%25999&translate-esc=on
             // const imageBox = document.getElementById('imageBox');
             //imageBox.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
 
@@ -397,5 +399,6 @@
 </body>
 
 </html>
+
 
 
