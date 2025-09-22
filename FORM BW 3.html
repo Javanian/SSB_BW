@@ -312,8 +312,8 @@
         }
 
         function showImage(st_employeid, st_confirmation_no) {
-            const imageUrl = `https://barcodeapi.org/api/128/${st_employeid}%25${st_confirmation_no}?&dpi=200&height=30&text=none`;
-            
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${st_employeid}%25${st_confirmation_no}&translate-esc=on`;
+            //`https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on`;
             const popup = document.getElementById('imagePopup');
             const popupImg = document.getElementById('popupImg');
             popupImg.src = imageUrl;
@@ -399,6 +399,7 @@
 </body>
 
 </html>
+
 
 
 
