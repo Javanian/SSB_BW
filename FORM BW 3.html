@@ -169,7 +169,7 @@
             max-height: 100%;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            padding: 5px;
+            padding: 2px;
         }
 
         .result-table {
@@ -313,7 +313,7 @@
         }
 
         function showImage(st_employeid, st_confirmation_no) {
-            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${st_employeid}%25${st_confirmation_no}&translate-esc=on`;
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${st_employeid}%25${st_confirmation_no}&dpi=200&translate-esc=on`;
             //`https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on`;
             const popup = document.getElementById('imagePopup');
             const popupImg = document.getElementById('popupImg');
@@ -384,9 +384,9 @@
 
         function generateImage(value) {
             const snku = document.getElementById('sn').value || '';
-            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on`;
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&dpi=200&translate-esc=on`;
             //`https://barcodeapi.org/api/128/${snku}%25${value}`;
-            //https://barcode.tec-it.com/barcode.ashx?data=jobticket%25999&translate-esc=on
+            //https://barcode.tec-it.com/barcode.ashx?data=90002%252599999&multiplebarcodes=true&dpi=200
             // const imageBox = document.getElementById('imageBox');
             //imageBox.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
 
@@ -400,6 +400,7 @@
 </body>
 
 </html>
+
 
 
 
