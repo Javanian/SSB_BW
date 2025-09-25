@@ -312,7 +312,7 @@
         }
 
         function showImage(st_employeid, st_confirmation_no) {
-            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${st_employeid}%25${st_confirmation_no}&translate-esc=on&dpi=200`;
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${st_employeid}%25${st_confirmation_no}&translate-esc=on&dpi=300`;
             //`https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on`;
             const popup = document.getElementById('imagePopup');
             const popupImg = document.getElementById('popupImg');
@@ -383,7 +383,7 @@
 
         function generateImage(value) {
             const snku = document.getElementById('sn').value || '';
-            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on&dpi=200`;
+            const imageUrl = `https://barcode.tec-it.com/barcode.ashx?data=${snku}%25${value}&translate-esc=on&dpi=300`;
             //`https://barcodeapi.org/api/128/${snku}%25${value}`;
             //https://barcode.tec-it.com/barcode.ashx?data=90002%252599999&multiplebarcodes=true&dpi=200
             // const imageBox = document.getElementById('imageBox');
@@ -399,6 +399,7 @@
 </body>
 
 </html>
+
 
 
 
