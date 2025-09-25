@@ -217,7 +217,7 @@
 </head>
 
 <body>
-    <h2>TIMESHEET SSB</h2>
+    <h2>TIMESHEET SSB V2</h2>
     <div class="tabs">
 
         <div class="tab active" onclick="switchTab('page1')">PRODUCTIVE</div>
@@ -254,7 +254,7 @@
             responseDiv.innerText = 'Sending data...';
 
             try {
-                const response = await fetch('https://prod-19.southeastasia.logic.azure.com:443/workflows/04103c94d2174560bf534d8b7a62fd2f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fqOl-vA3zFnKQ_h1chH4tioHqGHecKBf_0odUl204kk', {
+                const response = await fetch('https://55abbc32a6b04be7926ec22b6fad0b.0b.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/04103c94d2174560bf534d8b7a62fd2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PFOEm-Ma0v3s7_XN41d-8NZE_8MhjX9oMCW6aT15YvA', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -399,6 +399,7 @@
 </body>
 
 </html>
+
 
 
 
